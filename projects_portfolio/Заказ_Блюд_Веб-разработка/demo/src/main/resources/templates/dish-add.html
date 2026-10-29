@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Добавить блюдо</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f7fa;
+        color: #333;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 25px;
+        border-radius: 6px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    h2 {
+        color: #2c3e50;
+        margin-top: 0;
+    }
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #007bff;
+        text-decoration: none;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+    label {
+        display: block;
+        margin-top: 16px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 4px;
+        box-sizing: border-box;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0,123,255,0.15);
+    }
+    .error {
+        color: #dc3545;
+        font-size: 0.9em;
+        margin-top: 4px;
+        display: block;
+    }
+    button {
+        margin-top: 24px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    footer {
+        margin-top: 30px;
+        text-align: center;
+        color: #7f8c8d;
+        font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="/dishes" class="back-link"><- Отмена</a>
+  <h2>Добавить новое блюдо</h2>
+
+  <form th:action="@{/dishes/add}" th:object="${addDishDto}" method="post">
+    <label>Название:</label>
+    <input type="text" th:field="*{name}" placeholder="Название блюда">
+    <div th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></div>
+
+    <label>Описание:</label>
+    <textarea th:field="*{description}" rows="3" placeholder="Описание"></textarea>
+
+    <label>Цена (руб.):</label>
+    <input type="number" step="0.01" th:field="*{price}" placeholder="Цена">
+    <div th:if="${#fields.hasErrors('price')}" class="error" th:errors="*{price}"></div>
+
+    <label>Калории (ккал):</label>
+    <input type="number" th:field="*{calories}" placeholder="Калории">
+
+    <label>Категория:</label>
+    <select th:field="*{categoryName}">
+      <option value="">- Выберите категорию -</option>
+      <option th:each="cat : ${categories}" th:value="${cat.name}" th:text="${cat.name}"></option>
+    </select>
+    <div th:if="${#fields.hasErrors('categoryName')}" class="error" th:errors="*{categoryName}"></div>
+
+    <button type="submit">Добавить блюдо</button>
+  </form>
+</div>
+<footer>
+  <p>&copy 2025 Блюда</p>
+</footer>
+</body>
+</html>

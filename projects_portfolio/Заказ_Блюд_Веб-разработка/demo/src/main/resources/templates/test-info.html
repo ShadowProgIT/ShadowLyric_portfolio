@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a href="/test">На главную (тест)</a>
+
+<div>
+    <h2 th:text="${user.username}">-</h2>
+    <p th:text="${user.email}">-</p>
+    <p th:text="${user.phone}">-</p>
+    <p th:text="${user.wallet}">-</p>
+    <ul>
+        <li th:each="role : ${user.roles}" th:text="${role.role}">-</li>
+    </ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Главная страница</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .nav-links {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .nav-links a {
+            display: inline-block;
+            margin-right: 15px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Добро пожаловать в онлайн сервис заказа блюд</h1>
+    <p>Работаем для вашего комфорта</p>
+    <div class="nav-links">
+        <a href="/users/" sec:authorize="hasRole('ADMIN')">Список пользователей</a>
+        <a href="/dishes/" sec:authorize="isAuthenticated()">Список блюд</a>
+        <a href="/cart" sec:authorize="isAuthenticated()">Корзина</a>
+        <a href="/dishes/top" sec:authorize="isAuthenticated()">Топ 5-блюд</a>
+        <a href="/users/profile" sec:authorize="isAuthenticated()">Профиль</a>
+        <a href="/orders/" sec:authorize="hasAnyRole('MODERATOR', 'ADMIN')">Заказы</a>
+        <a href="/users/register">Регистрация</a>
+        <a href="/user/login">Авторизация</a>
+    </div>
+</div>
+<footer>
+    <p>&copy 2025 Блюда</p>
+</footer>
+</body>
+</html>

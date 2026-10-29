@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль — <span th:text="${profile.username}">Пользователь</span></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-bar a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .nav-bar a:hover {
+            text-decoration: underline;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        .logout-btn {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #ffc107;
+            color: #212529;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+        .logout-btn:hover {
+            background-color: #e0a800;
+        }
+        .alert {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .profile-field {
+            margin-bottom: 15px;
+        }
+        .profile-label {
+            font-weight: bold;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .profile-value {
+            color: #333;
+        }
+        .recharge-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .recharge-form input {
+            padding: 6px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            width: 120px;
+            font-size: 14px;
+        }
+        .recharge-form button {
+            padding: 6px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .recharge-form button:hover {
+            background-color: #218838;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="nav-bar">
+        <div>
+            <a href="/"><- На главную</a>
+            <a href="/users/profile">Профиль</a>
+            <a sec:authorize="hasRole('ADMIN')" href="/users">Пользователи</a>
+        </div>
+        <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;" class="logout-btn">Выйти</a>
+    </div>
+
+    <h2>Профиль пользователя</h2>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+    <div class="profile-field">
+        <span class="profile-label">Логин:</span>
+        <span class="profile-value" th:text="${profile.username}">username</span>
+    </div>
+    <div class="profile-field">
+        <span class="profile-label">Email:</span>
+        <span class="profile-value" th:text="${profile.email}">email@example.com</span>
+    </div>
+    <div class="profile-field">
+        <span class="profile-label">Телефон:</span>
+        <span class="profile-value" th:text="${profile.phone ?: '—'}">—</span>
+    </div>
+    <div class="profile-field">
+        <span class="profile-label">Кошелек:</span>
+        <span class="profile-value" th:text="${profile.wallet != null ? profile.wallet + ' руб.' : '—'}">—</span>
+    </div>
+
+    <div class="profile-field">
+        <span class="profile-label">Пополнить баланс:</span>
+        <form th:action="@{/users/profile/recharge}" method="post" class="recharge-form">
+            <input type="number" name="amount" step="10" min="0" placeholder="Сумма" required />
+            <button type="submit">Пополнить</button>
+        </form>
+    </div>
+
+    <div class="profile-field">
+        <span class="profile-label">Роли:</span>
+        <span class="profile-value" th:text="${profile.getLastRole}">-</span>
+    </div>
+</div>
+
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
+
+<footer>
+    <p>&copy; 2025 Блюда</p>
+</footer>
+</body>
+</html>

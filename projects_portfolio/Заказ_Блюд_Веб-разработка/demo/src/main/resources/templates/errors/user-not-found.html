@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 16px;
+            color: #d9534f;
+        }
+        p {
+            font-size: 1.1em;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 0 10px;
+            padding: 6px 12px;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+        }
+        a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${errorCode + ' – ' + errorTitle}">Ошибка</h1>
+    <p th:text="${errorMessage}">Упс.. возникла ошибка</p>
+    <div>
+        <a href="/">На главную</a>
+        <a href="/"><- Назад</a>
+    </div>
+</div>
+</body>
+</html>

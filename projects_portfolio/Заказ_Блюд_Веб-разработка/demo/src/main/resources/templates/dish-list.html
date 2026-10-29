@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Все блюда</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .btn-add {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+        .btn-add:hover {
+            background-color: #218838;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            background-color: #d4edda;
+            color: #155724;
+            font-size: 0.95em;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 16px;
+            border-radius: 6px;
+        }
+        .card h3 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+        .card p {
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+        .card strong {
+            color: #2c3e50;
+        }
+        .card a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .card a:hover {
+            text-decoration: underline;
+        }
+        .card a.delete {
+            color: #dc3545;
+        }
+        .btn-cart {
+            margin-top: 10px;
+            padding: 6px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .btn-cart:hover {
+            background-color: #218838;
+        }
+        .pagination {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .pagination a {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 0 4px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination a:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+        .return {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .return a {
+            margin: 0 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .return a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Все блюда</h1>
+
+    <a href="/dishes/add" class="btn-add" sec:authorize="hasAnyRole('MODERATOR', 'ADMIN')">Добавить блюдо</a>
+
+    <div th:if="${successMessage}" class="message" th:text="${successMessage}"></div>
+
+    <div th:if="${dishPage.empty}">
+        <p>Пока нет блюд</p>
+    </div>
+
+    <div class="grid">
+        <div th:each="dish : ${dishPage.content}" class="card">
+            <h3 th:text="${dish.name}">Название</h3>
+            <p><strong>Категория:</strong> <span th:text="${dish.category} ?: '—'"></span></p>
+            <p><strong>Цена:</strong> <span th:text="${dish.price} + ' ₽'"></span></p>
+            <p th:if="${dish.rating != null}">
+                <strong>Рейтинг:</strong> <span th:text="${dish.rating}"></span>
+            </p>
+            <p>
+                <a th:href="@{/dishes/{name}(name=${dish.name})}">Подробнее</a>
+                <a th:href="@{/dishes/delete/{name}(name=${dish.name})}"
+                   class="delete"
+                   onclick="return confirm('Удалить блюдо?')"
+                   sec:authorize="hasAnyRole('MODERATOR', 'ADMIN')">Удалить</a>
+            </p>
+            <form th:action="@{/cart/add}" method="post">
+                <input type="hidden" name="dishName" th:value="${dish.name}" />
+                <button type="submit" class="btn-cart">В корзину</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="pagination" th:if="${dishPage.totalPages > 1}">
+        <a th:if="${dishPage.number > 0}"
+           th:href="@{/dishes(page=${dishPage.number - 1}, size=6)}"><- Назад</a>
+
+        <span th:each="i : ${#numbers.sequence(0, dishPage.totalPages - 1)}">
+            <a th:href="@{/dishes(page=${i}, size=6)}"
+               th:text="${i + 1}"
+               th:classappend="${i == dishPage.number} ? 'active' : ''"></a>
+        </span>
+
+        <a th:if="${dishPage.number < dishPage.totalPages - 1}"
+           th:href="@{/dishes(page=${dishPage.number + 1}, size=6)}">Вперёд -></a>
+    </div>
+
+    <div class="return">
+        <a href="/"><- На главную</a>
+        <a href="/dishes/top">Топ блюд по категориям</a>
+        <a href="/cart">Корзина</a>
+    </div>
+</div>
+<footer>
+    <p>&copy; 2025 Блюда</p>
+</footer>
+</body>
+</html>

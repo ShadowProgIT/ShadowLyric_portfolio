@@ -1,0 +1,150 @@
+scalar DateTime
+scalar Date
+
+"Участник отправки (отправитель или получатель)"
+type Entrant {
+    id: ID!
+    firstname: String!
+    lastname: String!
+    email: String!
+    phone: String!
+    address: String!
+
+    sendingsAsSender(page: Int = 0, size: Int = 20): SendingConnection!
+
+    sendingsAsRecipient(page: Int = 0, size: Int = 20): SendingConnection!
+}
+
+"Отправка"
+type Sending {
+    id: ID!
+    trackingNumber: String!
+    status: String!
+    weight: Float!
+    size: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+
+
+    sender: Entrant!
+    recipient: Entrant!
+
+
+    history(page: Int = 0, size: Int = 50): SendingHistoryConnection!
+}
+
+"Событие в истории перемещения отправки"
+type SendingHistory {
+    id: ID!
+    sendingId: ID!
+    status: String!
+    location: String!
+    timestamp: DateTime!
+    comment: String
+
+    sending: Sending!
+}
+
+"Метаданные страницы"
+type PageInfo {
+    pageNumber: Int!
+    pageSize: Int!
+    totalPages: Int!
+    last: Boolean!
+}
+
+"Постраничный список участников"
+type EntrantConnection {
+    content: [Entrant!]!
+    pageInfo: PageInfo!
+    totalElements: Int!
+}
+
+"Постраничный список отправок"
+type SendingConnection {
+    content: [Sending!]!
+    pageInfo: PageInfo!
+    totalElements: Int!
+}
+
+"Постраничный список событий истории"
+type SendingHistoryConnection {
+    content: [SendingHistory!]!
+    pageInfo: PageInfo!
+    totalElements: Int!
+}
+
+"Создание нового участника"
+input CreateEntrantInput {
+    firstname: String!
+    lastname: String!
+    email: String!
+    phone: String!
+    address: String!
+}
+
+"Обновление участника"
+input UpdateEntrantInput {
+    firstname: String
+    lastname: String
+    email: String
+    phone: String
+    address: String
+}
+
+"Создание новой отправки"
+input CreateSendingInput {
+    trackingNumber: String!
+    weight: Float!
+    size: String!
+    recipientId: ID!
+    senderId: ID!
+}
+
+"Обновление отправки"
+input UpdateSendingInput {
+    trackingNumber: String
+    weight: Float
+    size: String
+    recipientId: ID
+    senderId: ID
+}
+
+"Добавление события в историю"
+input AddHistoryEventInput {
+    status: String!
+    location: String!
+    comment: String
+}
+
+"Фильтр для списка отправки"
+input SendingFilter {
+    status: String
+    trackingNumber: String
+    senderId: ID
+    recipientId: ID
+}
+
+type Query {
+    entrants(page: Int = 0, size: Int = 20): EntrantConnection!
+
+    entrant(id: ID!): Entrant
+
+    sendings(filter: SendingFilter, page: Int = 0, size: Int = 20): SendingConnection!
+
+    sending(id: ID!): Sending
+
+    sendingHistory(sendingId: ID!, page: Int = 0, size: Int = 50): SendingHistoryConnection!
+}
+
+type Mutation {
+    createEntrant(input: CreateEntrantInput!): Entrant!
+    updateEntrant(id: ID!, input: UpdateEntrantInput!): Entrant!
+    deleteEntrant(id: ID!): Boolean!
+
+    createSending(input: CreateSendingInput!): Sending!
+    updateSending(id: ID!, input: UpdateSendingInput!): Sending!
+    deleteSending(id: ID!): Boolean!
+
+    addHistoryEvent(sendingId: ID!, input: AddHistoryEventInput!): SendingHistory!
+}

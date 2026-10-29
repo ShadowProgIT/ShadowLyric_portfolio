@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Профиль пользователя</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        .user-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .user-card p {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        .label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .value {
+            color: #333;
+        }
+        .actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn {
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 0 8px;
+            display: inline-block;
+        }
+        .btn-back {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        .btn-back:hover {
+            background-color: #dde0e3;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Профиль пользователя</h1>
+    <div class="user-card">
+        <p><span class="label">Имя пользователя:</span> <span class="value" th:text="${user.username}">username</span></p>
+        <p><span class="label">Email:</span> <span class="value" th:text="${user.email}">email@example.com</span></p>
+        <p><span class="label">Телефон:</span> <span class="value" th:text="${user.phone != null ? user.phone : 'Не указан'}">+7...</span></p>
+        <p><span class="label">Роль:</span> <span class="value" th:text="${user.lastRole}">USER</span></p>
+        <p><span class="label">Баланс кошелька:</span> <span class="value" th:text="${user.wallet != null ? user.wallet + ' ₽' : '0.00 ₽'}">0.00 руб.</span></p>
+    </div>
+
+    <div class="actions">
+        <a href="/users/" class="btn btn-back"><- Назад к списку</a>
+        <a th:href="@{/users/delete/{username}(username=${user.username})}"
+           class="btn btn-delete"
+           onclick="return confirm('Вы уверены, что хотите удалить пользователя &quot;' + [[${user.username}]] + '&quot;?');">
+            Удалить
+        </a>
+    </div>
+</div>
+<footer>
+    <p>&copy; 2025 Блюда</p>
+</footer>
+</body>
+</html>

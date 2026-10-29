@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${errorTitle}">Ошибка</title>
+</head>
+<body>
+<h1 th:text="${errorTitle}">Доступ запрещен</h1>
+<p th:text="${errorMessage}">У вас нет доступа</p>
+<small th:text="${errorCode}">403</small>
+<br><br>
+<a th:href="@{/}"><- На главную</a>
+</body>
+</html>

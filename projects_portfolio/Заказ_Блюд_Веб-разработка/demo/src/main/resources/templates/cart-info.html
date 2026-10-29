@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Корзина</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f7fa;
+        color: #333;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 25px;
+        border-radius: 6px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    h2 {
+        color: #2c3e50;
+        margin-top: 0;
+    }
+    .back-link {
+        display: inline-block;
+        margin-bottom: 15px;
+        color: #007bff;
+        text-decoration: none;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+    }
+    .item-info {
+        flex-grow: 1;
+        font-size: 1em;
+    }
+    .remove-form {
+        margin-left: 15px;
+    }
+    .btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.95em;
+    }
+    .btn-remove {
+        background-color: #dc3545;
+        color: white;
+    }
+    .btn-clear {
+        background-color: #fd7e14;
+        color: white;
+        padding: 8px 16px;
+        margin-top: 20px;
+    }
+    .btn-primary {
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 4px;
+    }
+    .btn-order {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .empty-cart {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        margin: 20px 0;
+    }
+    .total {
+        margin-top: 20px;
+        text-align: right;
+        font-weight: bold;
+        font-size: 1.1em;
+        color: #2c3e50;
+    }
+    .actions {
+        text-align: center;
+        margin-top: 20px;
+    }
+    footer {
+        margin-top: 30px;
+        text-align: center;
+        color: #7f8c8d;
+        font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="/users/profile" class="back-link"><- Профиль</a>
+  <h2>Ваша корзина</h2>
+  <p><strong>Пользователь:</strong> <span th:text="${cart.email}"></span></p>
+
+  <div th:if="${#lists.isEmpty(cart.items)}">
+    <p class="empty-cart">Ваша корзина пуста</p>
+    <a href="/dishes" class="btn-primary">Вернуться в меню</a>
+  </div>
+
+  <div th:unless="${#lists.isEmpty(cart.items)}">
+    <div th:each="item : ${cart.items}" class="cart-item">
+      <div class="item-info">
+        <strong th:text="${item.dishName}"></strong> —
+        <span th:text="${item.quantity}"></span> шт. *
+        <span th:text="${#numbers.formatDecimal(item.price, 1, 2)} + ' ₽'"></span>
+      </div>
+      <form th:action="@{/cart/remove}" method="post" class="remove-form">
+        <input type="hidden" name="dishName" th:value="${item.dishName}" />
+        <button type="submit" class="btn btn-remove">Удалить</button>
+      </form>
+    </div>
+
+    <form th:action="@{/cart/clear}" method="post" style="text-align: center;">
+      <button type="submit" class="btn btn-clear">Очистить всю корзину</button>
+    </form>
+
+    <div class="actions">
+      <a href="/dishes" class="btn-primary">Продолжить покупки -></a>
+    </div>
+
+    <div class="total">
+      Итого: <span th:text="${#strings.toString(cart.totalPrice).replaceAll('\\.?0*$','')} + ' ₽'"></span>
+    </div>
+
+    <div class="actions" style="margin-top: 20px;">
+      <form th:action="@{/orders/create}" method="post">
+        <button type="submit" class="btn btn-order">Оформить заказ</button>
+      </form>
+    </div>
+  </div>
+</div>
+<footer>
+  <p>&copy 2025 Блюда</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_package = "com.logistic.grpc.contract";
+option java_multiple_files = true;
+package logisticcalc;
+
+service ShipmentCalculator {
+  rpc CalculateETA (ETACalculationRequest) returns (ETACalculationResponse);
+}
+
+message ETACalculationRequest {
+  int64 sending_id = 1;
+  string origin_city = 2;
+  string dest_city = 3;
+  double weight_kg = 4;
+}
+
+message ETACalculationResponse {
+  int64 sending_id = 1;
+  int32 estimated_minutes = 2;
+  string route_status = 3;
+}
+
+
+

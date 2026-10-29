@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Список заказов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .no-data {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Список заказов</h2>
+
+    <div th:if="${orders.isEmpty()}">
+        <p class="no-data">Заказов нет</p>
+    </div>
+
+    <div th:unless="${orders.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>Email клиента</th>
+                <th>Статус</th>
+                <th>Сумма, ₽</th>
+                <th>Время доставки, мин</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.email}">—</td>
+                <td th:text="${order.status}">—</td>
+                <td th:text="${#numbers.formatDecimal(order.amount, 1, 2)}">—</td>
+                <td th:text="${order.deliveryTime}">—</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/" class="back-link"><- Назад на главную</a>
+</div>
+<footer>
+    <p>&copy; 2025 Блюда</p>
+</footer>
+</body>
+</html>

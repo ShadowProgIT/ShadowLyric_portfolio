@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${dish.name}">Блюдо</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f7fa;
+        color: #333;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 25px;
+        border-radius: 6px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+        color: #2c3e50;
+        margin-top: 0;
+    }
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: #007bff;
+        text-decoration: none;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+    .btn-cart {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .btn-cart:hover {
+        background-color: #218838;
+    }
+    footer {
+        margin-top: 30px;
+        text-align: center;
+        color: #7f8c8d;
+        font-size: 0.9em;
+    }
+    p {
+        margin: 12px 0;
+        line-height: 1.5;
+    }
+    strong {
+        color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 th:text="${dish.name}">Название</h1>
+
+  <p><strong>Категория:</strong> <span th:text="${dish.category} ?: '—'"></span></p>
+  <p><strong>Описание:</strong> <span th:text="${dish.description} ?: 'Без описания'"></span></p>
+  <p><strong>Цена:</strong> <span th:text="${dish.price} + ' ₽'"></span></p>
+  <p><strong>Калории:</strong> <span th:text="${dish.calories} ?: '—'"></span> ккал</p>
+  <p>
+    <strong>Рейтинг:</strong> <span th:text="${dish.rating} ?: '—'"></span>
+    (<span th:text="${dish.reviewsCount} + ' отзывов'"></span>)
+  </p>
+
+  <form th:action="@{/cart/add}" method="post">
+    <input type="hidden" name="dishName" th:value="${dish.name}" />
+    <button type="submit" class="btn-cart">В корзину</button>
+  </form>
+
+  <form th:action="@{/dishes/{name}/edit-price(name=${dish.name})}" method="post" th:object="${editPriceDto}">
+    <input type="hidden" th:field="*{dishName}" />
+    <input type="number" th:field="*{price}" placeholder="Новая цена" min="0.1"/>
+
+    <div th:if="${#fields.hasErrors('price')}"
+         th:errors="*{price}"
+         class="error"
+         style="color: red;"></div>
+
+    <button type="submit">Изменить цену</button>
+  </form>
+
+  <a href="/dishes" class="back-link"><- Назад к списку</a>
+</div>
+<footer>
+  <p>&copy; 2025 Блюда</p>
+</footer>
+</body>
+</html>
